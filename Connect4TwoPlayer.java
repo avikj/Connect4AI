@@ -2,9 +2,7 @@
 
 import java.util.Scanner;
 
-public class Connect4TerminalGame {
- 
-
+public class Connect4TwoPlayer {
   public static void main(String[] args) {
     Scanner in = new Scanner(System.in);
     Connect4Board board = new Connect4Board();

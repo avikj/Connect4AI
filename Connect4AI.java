@@ -1,15 +1,13 @@
-// Single player Connect 4 against Monte Carlo Tree Search AI
+// Monte Carlo Tree Search AI for Connect 4
 
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
-import java.util.Scanner;
 
-public class MCTS {
+public class Connect4AI {
   private final MCTSNode root; // starting state
   private final int width;
   private static final double EXPLORATION_PARAMETER = Math.sqrt(2);
-  private long givenTime = TimeUnit.SECONDS.toNanos(2);
-  public MCTS(Connect4Board board, long givenTime) {
+  private long givenTime;
+  public Connect4AI(Connect4Board board, long givenTime) {
     this.width = board.width;
     this.givenTime = givenTime;
     root = new MCTSNode(null, board.copy());
@@ -135,14 +133,6 @@ public class MCTS {
       visited = false;
     }
 
-    /*public void instantiateChildren() {
-      for(int i = 0; i < width; i++) {
-        if(children[i] == null) {
-          children[i] = new MCTSNode(this, board.getNextState(i));
-        }
-      }
-    }*/
-
     public int incrementVisits() {
       return ++visits;
     }
@@ -168,44 +158,6 @@ public class MCTS {
     }
     public double getPlayer1Wins() {
       return player1Wins;
-    }
-  }
-
-  public static void main(String[] args) {
-    final long GIVEN_TIME = TimeUnit.SECONDS.toNanos(args.length > 0 ? Integer.parseInt(args[0]) : 2);
-    Scanner in = new Scanner(System.in);
-    Connect4Board board = new Connect4Board();
-    boolean turn = Connect4Board.PLAYER_1_TURN;
-    while(board.currentGameState() == Connect4Board.ONGOING) {
-      System.out.println("\n\n"+board);
-      int moveColumn;
-      do {
-        if(board.getNextTurn() == Connect4Board.PLAYER_1_TURN) {
-          System.out.printf("Enter your move: ", board.getNextTurn() == Connect4Board.PLAYER_1_TURN ? 1 : 2);
-          moveColumn = in.nextInt();
-        }
-        else {
-          System.out.print("AI determining move: ");
-          MCTS ai = new MCTS(board, GIVEN_TIME);
-          moveColumn = ai.getOptimalMove();
-          System.out.println(moveColumn);
-        }
-      } while(!board.canPlace(moveColumn));
-      board.place(moveColumn);
-    }
-    int gameState = board.currentGameState();
-    System.out.println("\n\n\n\n\n");
-    System.out.println(board);
-    switch(gameState) {
-      case Connect4Board.PLAYER_1_WON:
-        System.out.println("You won.\n");
-        break;
-      case Connect4Board.PLAYER_2_WON:
-        System.out.println("AI won.\n");
-        break;
-      default:
-        System.out.println("Tie.\n");
-        break;
     }
   }
 }
