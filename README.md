@@ -17,5 +17,7 @@ java Connect4TwoPlayer
 
 ```sh
 javac Connect4SinglePlayer.java
-java Connect4SinglePlayer
+java Connect4SinglePlayer <seconds>
 ```
+
+Optional argument for time given to AI to determine move; defaults to 2 seconds. Higher time values result in slower but stronger AI.
