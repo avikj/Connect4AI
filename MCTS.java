@@ -8,14 +8,15 @@ public class MCTS {
   private final MCTSNode root; // starting state
   private final int width;
   private static final double EXPLORATION_PARAMETER = Math.sqrt(2);
-  private static final long GIVEN_TIME = TimeUnit.SECONDS.toNanos(2);
-  public MCTS(Connect4Board board) {
+  private long givenTime = TimeUnit.SECONDS.toNanos(2);
+  public MCTS(Connect4Board board, long givenTime) {
     this.width = board.width;
+    this.givenTime = givenTime;
     root = new MCTSNode(null, board.copy());
   }
 
   public int getOptimalMove() {
-    for (long stop = System.nanoTime()+GIVEN_TIME; stop>System.nanoTime();) {
+    for (long stop = System.nanoTime()+givenTime; stop>System.nanoTime();) {
       MCTSNode selectedNode = select();
       if(selectedNode == null)
         continue;
@@ -171,6 +172,7 @@ public class MCTS {
   }
 
   public static void main(String[] args) {
+    final long GIVEN_TIME = TimeUnit.SECONDS.toNanos(args.length > 0 ? Integer.parseInt(args[0]) : 2);
     Scanner in = new Scanner(System.in);
     Connect4Board board = new Connect4Board();
     boolean turn = Connect4Board.PLAYER_1_TURN;
@@ -184,7 +186,7 @@ public class MCTS {
         }
         else {
           System.out.print("AI determining move: ");
-          MCTS ai = new MCTS(board);
+          MCTS ai = new MCTS(board, GIVEN_TIME);
           moveColumn = ai.getOptimalMove();
           System.out.println(moveColumn);
         }
