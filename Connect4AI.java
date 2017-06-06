@@ -27,12 +27,12 @@ public class Connect4AI {
     for(int i = 1; i < width; i++) {
       if(root.children[i] != null) {
         if(maxIndex == -1 || (root.board.getNextTurn() == Connect4Board.PLAYER_1_TURN 
-          ? root.children[i].getPlayer1Wins() 
-          : (root.children[i].getVisits() - root.children[i].getPlayer1Wins()))/root.children[i].getVisits()
+          ? root.children[i].player1Wins 
+          : (root.children[i].visits - root.children[i].player1Wins))/root.children[i].visits
           > 
           (root.board.getNextTurn() == Connect4Board.PLAYER_1_TURN 
-          ? root.children[maxIndex].getPlayer1Wins() 
-          : (root.children[maxIndex].getVisits() - root.children[maxIndex].getPlayer1Wins())/root.children[maxIndex].getVisits())
+          ? root.children[maxIndex].player1Wins 
+          : (root.children[maxIndex].visits - root.children[maxIndex].player1Wins)/root.children[maxIndex].visits)
           && root.board.canPlace(i))
             maxIndex = i;
       }
@@ -59,10 +59,10 @@ public class Connect4AI {
         continue;
       MCTSNode currentChild = parent.children[i];
       double wins = currentChild.board.getNextTurn() == Connect4Board.PLAYER_1_TURN 
-        ? currentChild.getPlayer1Wins() 
-        : (currentChild.getVisits()-currentChild.getPlayer1Wins());
-      double selectionVal = wins/currentChild.getVisits() 
-        + EXPLORATION_PARAMETER*Math.sqrt(Math.log(parent.getVisits())/currentChild.getVisits());// UCT
+        ? currentChild.player1Wins 
+        : (currentChild.visits-currentChild.player1Wins);
+      double selectionVal = wins/currentChild.visits 
+        + EXPLORATION_PARAMETER*Math.sqrt(Math.log(parent.visits)/currentChild.visits);// UCT
       if(selectionVal > maxSelectionVal) {
         maxSelectionVal = selectionVal;
         maxIndex = i;
@@ -122,7 +122,6 @@ public class Connect4AI {
     private MCTSNode[] children;
     private int visits;
     private double player1Wins;
-    private boolean visited;
     private final Connect4Board board;
     public MCTSNode(MCTSNode parent, Connect4Board board) {
       this.parent = parent;
@@ -130,33 +129,13 @@ public class Connect4AI {
       this.visits = 0;
       this.player1Wins = 0;
       children = new MCTSNode[width];
-      visited = false;
     }
 
     public int incrementVisits() {
       return ++visits;
     }
-
     public double incrementPlayer1Wins(double result) {
       player1Wins += result;
-      return player1Wins;
-    }
-
-    public boolean hasStatistics() {
-      return visited;
-    }
-    public void createStatistics() {
-      visited = true;
-    }
-
-    public Connect4Board getBoard() {
-      return board;
-    }
-
-    public int getVisits() {
-      return visits;
-    }
-    public double getPlayer1Wins() {
       return player1Wins;
     }
   }
