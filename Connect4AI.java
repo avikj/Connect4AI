@@ -24,17 +24,17 @@ public class Connect4AI {
     }
 
     int maxIndex = -1;
+    double maxWinRatio = -1;
     for(int i = 0; i < width; i++) {
       if(root.children[i] != null) {
-        if(maxIndex == -1 || (root.board.getNextTurn() == Connect4Board.PLAYER_1_TURN 
+        double winRatio = (root.board.getNextTurn() == Connect4Board.PLAYER_1_TURN 
           ? root.children[i].player1Wins 
-          : (root.children[i].visits - root.children[i].player1Wins))/root.children[i].visits
-          > 
-          (root.board.getNextTurn() == Connect4Board.PLAYER_1_TURN 
-          ? root.children[maxIndex].player1Wins 
-          : (root.children[maxIndex].visits - root.children[maxIndex].player1Wins)/root.children[maxIndex].visits)
-          && root.board.canPlace(i))
+          : (root.children[i].visits - root.children[i].player1Wins))/root.children[i].visits;
+        if((maxIndex == -1 || winRatio > maxWinRatio) && root.board.canPlace(i)) {
+            maxWinRatio = winRatio;
             maxIndex = i;
+        }
+        // System.out.printf("\nlocation%d: p1wins: %f/%d = %f\n", i, root.children[i].player1Wins, root.children[i].visits, root.children[i].player1Wins/root.children[i].visits);
       }
     }
     return maxIndex;
