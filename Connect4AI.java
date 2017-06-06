@@ -24,19 +24,14 @@ public class Connect4AI {
     }
 
     int maxIndex = -1;
-    double maxWinRatio = -1;
     for(int i = 0; i < width; i++) {
       if(root.children[i] != null) {
-        double winRatio = (root.board.getNextTurn() == Connect4Board.PLAYER_1_TURN 
-          ? root.children[i].player1Wins 
-          : (root.children[i].visits - root.children[i].player1Wins))/root.children[i].visits;
-        if((maxIndex == -1 || winRatio > maxWinRatio) && root.board.canPlace(i)) {
-            maxWinRatio = winRatio;
-            maxIndex = i;
-        }
-        // System.out.printf("\nlocation%d: p1wins: %f/%d = %f\n", i, root.children[i].player1Wins, root.children[i].visits, root.children[i].player1Wins/root.children[i].visits);
+        if(maxIndex == -1 || root.children[i].visits > root.children[maxIndex].visits)
+          maxIndex = i;
+        // System.out.printf("\nlocation%d: p1wins: %f/%d = %f", i, root.children[i].player1Wins, root.children[i].visits, root.children[i].player1Wins/root.children[i].visits);
       }
     }
+    // System.out.println();
     return maxIndex;
   }
 
@@ -58,7 +53,7 @@ public class Connect4AI {
       if(!parent.board.canPlace(i))
         continue;
       MCTSNode currentChild = parent.children[i];
-      double wins = currentChild.board.getNextTurn() == Connect4Board.PLAYER_1_TURN 
+      double wins = parent.board.getNextTurn() == Connect4Board.PLAYER_1_TURN 
         ? currentChild.player1Wins 
         : (currentChild.visits-currentChild.player1Wins);
       double selectionVal = wins/currentChild.visits 
