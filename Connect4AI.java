@@ -24,7 +24,7 @@ public class Connect4AI {
     }
 
     int maxIndex = -1;
-    for(int i = 1; i < width; i++) {
+    for(int i = 0; i < width; i++) {
       if(root.children[i] != null) {
         if(maxIndex == -1 || (root.board.getNextTurn() == Connect4Board.PLAYER_1_TURN 
           ? root.children[i].player1Wins 
