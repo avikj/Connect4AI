@@ -9,6 +9,7 @@ public class Connect4SinglePlayer {
     Scanner in = new Scanner(System.in);
     Connect4Board board = new Connect4Board();
     boolean turn = Connect4Board.PLAYER_1_TURN;
+    Connect4AI ai = new Connect4AI(board, GIVEN_TIME);
     while(board.currentGameState() == Connect4Board.ONGOING) {
       System.out.println("\n\n"+board);
       int moveColumn;
@@ -19,12 +20,12 @@ public class Connect4SinglePlayer {
         }
         else {
           System.out.print("AI determining move: ");
-          Connect4AI ai = new Connect4AI(board, GIVEN_TIME);
           moveColumn = ai.getOptimalMove();
           System.out.println(moveColumn);
         }
       } while(!board.canPlace(moveColumn));
       board.place(moveColumn);
+      ai.update(moveColumn);
     }
     int gameState = board.currentGameState();
     System.out.println("\n\n\n\n\n");

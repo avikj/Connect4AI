@@ -3,7 +3,7 @@
 import java.util.ArrayList;
 
 public class Connect4AI {
-  private final MCTSNode root; // starting state
+  private MCTSNode root; // starting state
   private final int width;
   private static final double EXPLORATION_PARAMETER = Math.sqrt(2);
   private long givenTime;
@@ -13,6 +13,14 @@ public class Connect4AI {
     root = new MCTSNode(null, board.copy());
   }
 
+  // sets root to new board state given move
+  public void update(int move) {
+      root = root.children[move] != null 
+        ? root.children[move] 
+        : new MCTSNode(null, root.board.getNextState(move));
+  }
+
+  // returns the optimal move for the current player
   public int getOptimalMove() {
     for (long stop = System.nanoTime()+givenTime; stop>System.nanoTime();) {
       MCTSNode selectedNode = select();
